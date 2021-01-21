@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="en">
+<head>
+   <meta charset="utf-8"/>
+   <title>Design Document 1, CSC/CPE 203</title>
+    <link href="style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+<div class="container">
+  <div class="boxed">
+
+  <div class="header">  <h1>Design Document 1, CSC/CPE 203</h1>
+  </div>
+
+<p>
+Just as in the real world, characters (people and animals)
+have both state (i.e., data, e.g., where they are in the world and their mood),
+and are capable of actions (e.g., walking, eating, etc.). We want our
+computational objects to encapsulate both data and functions (called methods
+when they are associated with an object).
+</p>
+
+<p>
+This first course project is split into two parts: a design document
+and an implementation refactoring.  In doing this project, you will gain
+experience with methods to specify an object's behavior and with basic
+UML class diagrams.
+</p>
+
+<p>
+For this project you will be provided the code for a virtual world program
+and a UML diagram of the classes used to structure this program.  The program,
+as given, is written in a non-object-oriented style like that seen in
+CPE 101.  In particular, the vast majority of the functionality is defined
+as <code>static</code> methods in the <code>Functions</code> class (with a
+few methods defined in <code>EventComparator</code>, <code>Point</code>,
+and <code>VirtualWorld</code>).  You should take some time to skim the
+provided code to get a basic sense of how it is organized.  <small>(You might
+question the quality of this design (which is great!), especially if you have
+some experience with object-oriented design; you should, however, note that this
+is a perfectly valid approach (though some parts are intentionally structured
+for later improvements) that might actually serve you well in a language that
+does not directly support object-oriented programming, such as C in CPE 357.)
+</small>
+</p>
+
+
+
+
+<div class="header">
+<h3>Task Overview</h3>
+</div>
+
+<i>You must become familiar with reading the code base, but for this first
+part of this part of the assignment you will only be modifying the UML, so the below
+refers to making changes in the UML diagram.</i>
+<p>
+You must identify the behavior associated with each class (i.e.,
+the behavior exhibited by instances of the class) and move that behavior
+from the standalone static methods in <code>Functions.java</code> to
+(static or non-static, as appropriate) methods defined within the class.
+For this assignment, you will not add new functionality (aside from some
+accessor/mutator methods, only as needed). 
+</p>
+
+<p>
+You are encouraged to develop the UML design document first, however,
+you are also welcome to simultaneously work on the code
+refactoring.  If you do start refactoring the code, you are encouraged to <i>implement
+the refactoring incrementally so that your refactored program executes
+properly at each step.</i>
+</p>
+
+<div class="header">
+<h2>Objectives</h2>
+</div>
+
+<ul>
+<li>To be able to read and understand java code in terms of methods and class instances
+<li>To be able to identify where a static method should be moved to better associate computation with data
+<li>To be able to modify an exisiting UML diagram (moving methods from one class to another, and adding any necessary accessor methods)
+<li>Specifically, for this assignment, in the UML, move almost all static methods in the file <code>Functions.java</code> to the appropriate class
+</ul>
+
+
+
+<div class="header">
+<h2>UML of the source code as-is</h2>
+</div>
+
+Start by getting a copy of the UML diagram of the project as-is.  This is available on the PolyLearn.
+
+<p>
+The provided UML diagram was created using the freely available
+<a href="https://www.yworks.com/products/yed">yEd Graph Editor</a>.
+You may use this on the department workstations or install it on your
+own machine.  This editor was selected for its simplicity in the number
+of features available for UML editing (our intentionally limited use of
+UML is sufficiently supported without a potentially overwhelming number
+of additional features).
+</p>
+
+<p>
+On the department workstations, you can execute yEd as follows:
+</p>
+      <blockquote>
+java -jar /home/akeen/public/yed/yed.jar Methods.graphml
+      </blockquote>
+
+<p>
+Selecting a class diagram, right-clicking, and then selecting the
+Properties option will open a dialog window to allow editing the
+class diagram.  Selecting the UML tab will then allow editing the
+lists of attributes and methods.  <small>(This dialog window can
+be resized; I realized this too late.  For those that like living
+dangerously, the <code>.graphml</code> file is a plain text format
+that can be edited directly.)</small>
+</p>
+<b>Please take a moment to load the given digram into yEd and take a look at the general structure of the project.  We will be using this code base for the rest of the quarter so please take the time to make friends with it.</b>
+
+
+<div class="header">
+<h2>The source code</h2>
+</div>
+
+Your first task is to modify the UML such that the <code>static methods</code> in <code>Functions.java</code> are moved to be appropriate instance methods for the various classes.
+As you are working on this, you may want to refer to the actual code.  And for the
+next part of this assignment you will in fact refactor the code based on your UML design.
+<p>
+
+The provided source code is available on PolyLearn.
+</p>
+
+
+<p>
+Details on building and executing the program are given in the description
+of <a href="project1code.html">Programming Assignment 1</a>.
+</p>
+
+
+<div class="header">
+<h2>Design Document - what you *need* to do</h2>
+</div>
+
+<p>
+In general, this assignment will take some careful thought and design, so
+take the time to read the provided code and to plan your actions before
+making modifications (some tips for identifying methods are given later
+in this document). Read, think, design, and <i>then</i> code.
+</p>
+
+<p>
+Note that good design is somewhat subjective.  Even so, for the vast majority
+of the methods, there is a single "correct" class into which the method should
+be moved.  For a small number of methods, one could reasonably argue in favor
+of a few different classes.  For example, there are multiple classes with which
+one could reasonably associate the <code>adjacent</code> method.  Do your best
+to make reasonable decisions based on the design discussion in lecture and
+document these decisions in your design document.
+</p>
+
+<h4 class="header">Access Modifiers</h4>
+<p>
+   With the exception of some constant (<code>static final</code>) values,
+   all data attributes should be <code>private</code> and, when possible,
+   <code>final</code>. (<code>Point</code> is the exception to this since
+   each value acts as a constant value akin to an integer.)
+</p>
+
+<p>
+   Methods should also be <code>private</code> unless <code>public</code>
+   access is necessary (i.e., it is used outside of the defining class).
+   For this project, every method should be either <code>private</code>
+   or <code>public</code> (it is often better to avoid the default of
+   package-protected).
+</p>
+
+<div class="header">
+<h3>Deliverables</h3>
+</div>
+
+<p>
+   Your "design document" will consist of two parts: an updated UML diagram
+and a text document.  First, copy the provided UML diagram to
+<code>Methods.graphml</code>.  Then update this copy to reflect all
+method/data movements as well as any newly created accessor/mutator methods.
+</p>
+
+<p>Second, in a plain text file (named <code>DESIGN.txt</code>) list each of
+the methods that was left in the <code>Functions</code> class and give a
+brief justification for why this method was not moved.  You should also
+list each method that you feel could be reasonably placed in multiple
+classes and note 1) the class you selected and 2) the reason for that
+selection.
+</p>
+
+<div class="header">
+<h3>Identifying Methods</h3>
+</div>
+
+<p>
+The provided source code uses objects to hold data; these objects have
+no methods (no behavior).  Your task for this assignment is to identify
+the behavior associated with objects (instances) of a class and move
+this behavior from standalone functions to methods defined within the
+class.
+</p>
+
+<p>
+Reasonable steps for this assignment include (additional, programming-specific,
+tips are given in
+<a href="project2.html">Programming Assignment 1</a>):
+</p>
+
+<ul>
+   <li>
+      <p>Run the program.  You can use <code>-fast</code>, <code>-faster</code>,
+      <code>-fastest</code> on the command-line to increase the rate at which
+      actions are executed.  You can use the arrow keys to shift the view of
+      the virtual world.
+      </p>
+   </li>
+   <li>
+      <p>Read (skim) the source code.
+      </p>
+   </li>
+   <li>
+      <p>View the provided UML diagram to see the name of each class and the
+         data stored within instances of each class.
+      </p>
+   </li>
+   <li>
+      <p>Identify methods that interact with the data stored within an object
+         (and identify the object's class).
+      </p>
+   </li>
+   <li>
+      <p>Match behavior to classes.  </p>
+      <p>When looking for good matches of functions with classes, consider
+         the following hints:
+      </p>
+         <ul>
+            <li><p>If the attribute of an object is accessed directly
+                  via a dot (e.g., <i>entity.name</i>), then either
+                  the function in which this access appears should be
+                  defined in the object's class, or the access should be
+                  done via an accessor method.
+               </p>
+            </li>
+            <li><p>If a method determines its behavior based on the "kind"
+                  (e.g., the the various values of <code>ActionKind</code> or
+                  <code>EntityKind</code>)
+                  of object it is manipulating, then this method should likely
+                  be moved into that object's corresponding class (do not
+                  introduce separate classes at this time).
+               </p>
+            </li>
+         </ul>
+   </li>
+   <li>
+      <p>
+         There are some methods that may remain as static methods, but
+         that are reasonably moved into another class (these are often
+         considered "utility" methods derived from decomposing a problem
+         into simpler methods).
+      </p>
+      <p>
+         There are some methods that will reasonably remain as static
+         methods in the <code>Functions</code> class because there are
+         not yet appropriate classes for them.
+      </p>
+   </li>
+   <li>
+      <p>Run the program to verify that it behaves as expected.
+      </p>
+   </li>
+</ul>
+
+<div class="header">
+<h2>Assignment Submission</h2>
+</div>
+
+<p>
+Your submission of your design document will consist of the following files.  Add both of these files to your Project 1 Submission file on PolyLearn! 
+</p>
+
+<ul>
+   <li>Methods.graphml &mdash; the UML diagram</li>
+   <li>DESIGN.txt &mdash; plain text document justifying methods not moved and
+      placement of ambiguous methods</li>
+</ul>
+
+</div>
+</div>
+</body>
+</html>

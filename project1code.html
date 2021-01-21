@@ -1,0 +1,362 @@
+<!doctype html>
+<html lang="en">
+<head>
+   <meta charset="utf-8"/>
+   <title>Programming Assignment 1, CSC/CPE 203</title>
+    <link href="style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+<div class="container">
+  <div class="boxed">
+
+  <div class="header">  <h1>Programming Assignment 1, CSC/CPE 203</h1>
+  </div>
+
+<p>
+This programming assignment is the complement of the
+<a href="project1uml.html">Design Document 1</a>
+assignment.  The general task was already explained; this assignment
+description provides additional details and tips for the programming
+aspects of the redesign.
+</p>
+
+<div class="header">
+<h3>Task Overview</h3>
+</div>
+<i>At this point you should have looked at the UML for the project.</i>
+<p>
+You must identify the behavior associated with each class (i.e.,
+the behavior exhibited by instances of the class) and move that behavior
+from the standalone static methods in <code>Functions.java</code> to
+(static or non-static, as appropriate) methods defined within the class.
+For this assignment, you will not add new functionality (aside from some
+accessor/mutator methods, only as needed). This is to be done in two forms:
+an UML design document (design document 1 assignment) and a
+refactoring of the provided source code that executes as before.
+</p>
+
+<p>
+You are encouraged to develop the UML design document first, however,
+you are also welcome to simultaneously work on the code
+refactoring.  If you do start refactoring the code, you are encouraged to <i>implement
+the refactoring incrementally so that your refactored program executes
+properly at each step.</i>
+</p>
+
+<div class="header">
+<h2>Objectives</h2>
+</div>
+
+<ul>
+<li>To be able to read and understand java code in terms of methods and class instances
+<li>To be able to identify and convert static methods into instance methods to better associate computation with data
+<li>To be able to translate your code design from UML into refactored Java code
+<li>Specifically, for this assignment, in the actual java code, move almost all static methods in the file <code>Functions.java</code> to the appropriate class
+<li>To be able to make design changes to a large code base and have the code still work
+</ul>
+
+
+
+
+
+<div class="header">
+<h2>Building and Executing</h2>
+</div>
+
+<p>
+   After completion of the first few lab assignment(s) for this course, you
+should be comfortable with the basics of building and executing Java
+programs on both the command-line and in IntelliJ.
+</p>
+
+<p>
+   The provided source code relies on the <a href="https://processing.org/">
+processing.org</a> API for the graphical interface.  To use this API external
+to the Processing environment, you will need a jar file *please use the provided file 
+<b>processing-experimental.jar</b> file for both compilation and execution. *Note we are using a modified Processing jar that supports more recent versions of java, so please be sure to use the jar included in the zip file for this assignment.*
+</p>
+
+<div class="header">
+<h3>Command-line Execution</h3>
+</div>
+
+<p>
+   Without introducing a build tool, the most direct approach to building
+and executing the program is as follows.
+</p>
+
+<p>
+To compile all source files, execute the following in the directory
+holding the files.
+</p>
+
+<blockquote>
+javac -cp ${CLASSPATH}:processing-experimental.jar *.java
+</blockquote>
+
+<p>
+To execute the program, execute the following in the directory
+holding the files.  This also assumes that the <code>world.sav</code>
+file, the <code>imagelist</code>, and the <code>images</code> directory
+are also in the same directory.
+</p>
+
+<blockquote>
+java -cp ${CLASSPATH}:processing-experimental.jar VirtualWorld
+</blockquote>
+
+<h4 class="header">CLASSPATH</h4>
+
+<p>
+When compiling and running Java programs, the Java compiler/run-time
+will search various locations for classes that your program uses.  This
+allows, for instance, multiple Java programs to share libraries.  The
+<code>CLASSPATH</code> environment variable is how one specifies the
+locations to search for such classes.  You can simplify the above
+commands by setting the <code>CLASSPATH</code> in your shell
+configuration files (typically in <code>.mybashrc</code> on the CSL
+machines).
+</p>
+
+<div class="header">
+<h3>IntelliJ</h3>
+</div>
+
+<p>
+   The following steps will guide you through the creation of a new
+   project to build and execute the given program.  (We are going
+   through the steps as part of learning the tool for your future
+   use.)
+</p>
+
+<ul>
+   <li>
+      Create a new Java project.  You will not need to select any special
+      libraries/features or to use any template.
+   </li>
+   <li>
+      Add the <code>.java</code> source files to the project.  This is
+      most directly done via a graphical interface by selecting and
+      dragging (or copying, if you prefer) the files to the <code>src</code>
+      directory (folder) in the IntelliJ project view.
+   </li>
+   <li>
+      Edit the Configurations (can be selected from the Run menu).  Click
+      <code>+</code> to add a new configuration. Select <code>Application</code>,
+      enter <code>Basic</code> (for instance) as the name, and enter
+      <code>VirtualWorld</code> as the main class.
+      (You might add additional configurations with <code>-fast</code>,
+      <code>-faster</code>, or <code>-fastest</code> as the respective program
+      argument later.)
+   </li>
+   <li>
+      Open the Project Structure (under File) and select the Dependencies tab.
+      Click the <code>+</code> to add a new JAR.  In the file selection
+      dialog, find and select the
+      <b>processing-experimental.jar</b> that
+      you should have downloaded previously in the project zip file.
+   </li>
+</ul>
+
+<p>
+You should now be able to build and execute the program.  Executing the
+program, however, will not load the proper resources for the graphical
+interface.
+</p>
+
+<p>
+To run the program properly, copy the <code>world.sav</code> file, the
+<code>imagelist</code>, and the <code>images</code> directory to the 
+project folder in the project view.
+</p>
+
+<h4 class="header">Whoa!</h4>
+<p>
+That was a lot of steps.  If you got stuck and something is not working,
+just ask for assistance in office hours or lab.  Or take the opportunity
+to ask another student in the CSL (my experience is that the majority of
+students in the department are kind and want to help others succeed).
+</p>
+
+<div class="header">
+<h2>Source Code Refactoring</h2>
+</div>
+
+<p>
+   You must refactor the methods from the <code>Functions</code> class
+to move them into the appropriate classes as previously discussed.  As
+each method is moved, you will need to make modifications to the code
+that uses the method.
+</p>
+
+<p>
+   Your refactoring should mirror the work done for your design document
+(UML diagram) augmented with feedback from your instructor.
+</p>
+
+<p>
+   Your refactoring must not add or remove any functionality.  Your
+refactoring may add accessor/mutator methods, but only as needed.
+The resulting program must work as before.
+</p>
+
+<p>
+   It is not sufficient to simply move the static methods from
+<code>Functions</code> to the other classes and then continue to invoke
+them as public static methods.  For instance, if you determine that a
+method works primarily on data within an <code>Entity</code> object, then
+the method must be made non-static and the explicit <code>Entity</code>
+argument will be replaced by the implicit <code>this</code>.  This
+modification will necessitate appropriate changes to the invocation of
+the method.
+</p>
+
+<p>
+   As an example, moving the following (fake) method into <code>Entity</code>
+will change it as shown.
+</p>
+
+<blockquote>
+   <pre>
+      class Functions
+      {
+         public static void turnAround(Entity entity, int numRotations)
+         {
+            ... entity.id ...
+         }
+
+         ...
+            // invocation of turnAround
+            turnAround(entity, 20);
+
+      }
+   </pre>
+</blockquote>
+
+<p>
+   becomes
+</p>
+
+<blockquote>
+   <pre>
+      class Entity
+      {
+         public void turnAround(int numRotations)
+         {
+            ... this.id ...
+         }
+
+         ...
+            // invocation of turnAround
+            entity.turnAround(20);
+
+      }
+   </pre>
+</blockquote>
+
+<div class="header">
+<h3>Tips on Refactoring Methods</h3>
+</div>
+
+<p>
+   You can use the compiler (on the command-line or in the IDE) to help
+you with your refactoring.  In particular, as you make changes, the compiler
+will flag now invalid uses of moved methods.  This serves two purposes.  The
+first, and arguably most important, is gaining an understanding of the error
+messages that the compiler reports and the reasons for such error messages.
+Nobody enjoys seeing error messages, but quickly interpreting and addressing
+such errors will improve your workflow.
+</p>
+
+<p>
+   The second purpose for using the compiler as an aid is that it can quickly
+identify all parts of a code base affected by a change.  This is incredibly
+beneficial when working with unfamiliar code.  (Many IDEs also provide
+similar support even without explicitly compiling.)
+</p>
+
+<p>
+   Consider the following more specific tips.
+</p>
+
+<ul>
+   <li>
+      Examine the data attributes in each class.  Draw a graph of dependencies
+      between the classes (in the project) based on the data stored in each
+      (e.g., <code>WorldModel</code> relies on <code>Entity</code>).  Start
+      your refactoring by moving methods into those classes that depend on
+      the fewest other classes.
+   </li>
+   <li>
+      In the class you are currently examining, change the access modifier
+      for each data attribute to <code>private</code>.  Compile the program
+      to determine which methods attempt to access these private attributes.
+   </li>
+   <li>
+      If you are using IntelliJ, explore using the
+      <code>Refactor &gt; Move</code> feature.  Though this feature will not
+      make all of the necessary modifications, it will help with the task.
+      Be ware that overuse of this feature may interfere with the learning
+      objectives; but using this feature after manually moving a few methods
+      will save you time.
+   </li>
+   <li>
+      After moving a method (and removing <code>static</code>), remove the
+      target object from the parameter list (and change all uses within the
+      method to <code>this</code>, implicitly or explicitly).  Compile the
+      program to determine where the method was invoked.
+   </li>
+</ul>
+
+
+Recall from the design document:
+<h4 class="header">Access Modifiers</h4>
+<p>
+   With the exception of some constant (<code>static final</code>) values,
+   all data attributes should be <code>private</code> and, when possible,
+   <code>final</code>. (<code>Point</code> is the exception to this since
+   each value acts as a constant value akin to an integer.)
+</p>
+
+<p>
+   Methods should also be <code>private</code> unless <code>public</code>
+   access is necessary (i.e., it is used outside of the defining class).
+   For this project, every method should be either <code>private</code>
+   or <code>public</code> (it is often better to avoid the default of
+   package-protected).
+</p>
+
+
+<div class="header">
+<h2>Assignment Submission</h2>
+</div>
+
+This assignment is due approximately one week from it being assigned, check with your section.
+<p>
+Your submission of your refactoring will consist of the following files (this
+is the same set of files with which you started, but modified).
+</p>
+
+<ul>
+<li>Action.java</li>
+<li>ActionKind.java</li>
+<li>Background.java</li>
+<li>Entity.java</li>
+<li>EntityKind.java</li>
+<li>Event.java</li>
+<li>EventComparator.java</li>
+<li>EventScheduler.java</li>
+<li>Functions.java</li>
+<li>ImageStore.java</li>
+<li>Point.java</li>
+<li>Viewport.java</li>
+<li>VirtualWorld.java</li>
+<li>WorldModel.java</li>
+<li>WorldView.java</li>
+</ul>
+
+</div>
+</div>
+</body>
+</html>
