@@ -80,11 +80,11 @@ public final class VirtualWorld
       long time = System.currentTimeMillis();
       if (time >= next_time)
       {
-         Functions.updateOnTime(this.scheduler, time);
+         this.scheduler.updateOnTime(time);
          next_time = time + TIMER_ACTION_PERIOD;
       }
 
-      Functions.drawViewport(view);
+      view.drawViewport();
    }
 
    public void keyPressed()
@@ -109,14 +109,14 @@ public final class VirtualWorld
                dx = 1;
                break;
          }
-         Functions.shiftView(view, dx, dy);
+         view.shiftView(dx, dy);
       }
    }
 
    public static Background createDefaultBackground(ImageStore imageStore)
    {
       return new Background(DEFAULT_IMAGE_NAME,
-         Functions.getImageList(imageStore, DEFAULT_IMAGE_NAME));
+         imageStore.getImageList(DEFAULT_IMAGE_NAME));
    }
 
    public static PImage createImageColored(int width, int height, int color)
@@ -137,7 +137,7 @@ public final class VirtualWorld
       try
       {
          Scanner in = new Scanner(new File(filename));
-         Functions.loadImages(in, imageStore, screen);
+         imageStore.loadImages(in, screen);
       }
       catch (FileNotFoundException e)
       {
@@ -151,7 +151,7 @@ public final class VirtualWorld
       try
       {
          Scanner in = new Scanner(new File(filename));
-         Functions.load(in, world, imageStore);
+         imageStore.load(in, world);
       }
       catch (FileNotFoundException e)
       {
@@ -166,7 +166,7 @@ public final class VirtualWorld
       {
          //Only start actions for entities that include action (not those with just animations)
          if (entity.actionPeriod > 0)
-            Functions.scheduleActions(entity, scheduler, world, imageStore);
+            scheduler.scheduleActions(entity, world, imageStore);
       }
    }
 

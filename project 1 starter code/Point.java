@@ -9,7 +9,21 @@ final class Point
       this.y = y;
    }
 
-   public String toString()
+   public boolean adjacent(Point p2)
+   {
+      return (this.x == p2.x && Math.abs(this.y - p2.y) == 1) ||
+         (this.y == p2.y && Math.abs(this.x - p2.x) == 1);
+   }
+
+   public int distanceSquared(Point p2)
+    {
+       int deltaX = this.x - p2.x;
+       int deltaY = this.y - p2.y;
+
+       return deltaX * deltaX + deltaY * deltaY;
+    }
+
+    public String toString()
    {
       return "(" + x + "," + y + ")";
    }
